@@ -5,7 +5,7 @@ import { PropsProvider } from './api.jsx'
 // https://vitejs.dev/guide/features.html#glob-import
 const pages = import.meta.glob('./pages/*.jsx')
 
-// Follow `react-router-config` route structure
+// Follow `react-router` route structure
 export const routes = Object.keys(pages).map((path) => {
   const name = path.match(/\.\/pages\/(.*)\.jsx$/)[1]
   let component = null

@@ -4,7 +4,7 @@ import React from 'react'
 // https://vitejs.dev/guide/features.html#glob-import
 const pages = import.meta.glob('./pages/*.tsx')
 
-// Follow `react-router-config` route structure
+// Follow `react-router` route structure
 export default Object.keys(pages).map((path) => {
   const name = (path.match(/\.\/pages\/(.*)\.[jt]sx$/)?.[1] || '').toLowerCase()
   let component: any = null
@@ -14,7 +14,7 @@ export default Object.keys(pages).map((path) => {
     path: name === 'home' ? '/' : `/${name.toLowerCase()}`,
     exact: true,
     // Async components
-    component: (props: any) => {
+    element: (props: any) => {
       if (!component) {
         // Suspense will re-render when component is ready
         throw pages[path]().then((result) => {

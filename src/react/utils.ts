@@ -28,47 +28,49 @@ export function createRouter({
       state: null,
     }
 
+    const element = (props: Record<string, any>) => {
+      const { pathname, hash, search } = useLocation()
+      const url = createUrl(pathname + search + hash)
+      const routeBase = base && base({ url })
+
+      const from = currentRoute
+      const to = {
+        ...augmentedRoute,
+        path: pathname,
+        hash,
+        search,
+        params: useParams(),
+        // @ts-ignore -- This should be in ES2019 ??
+        query: Object.fromEntries(url.searchParams),
+        fullPath: getFullPath(url, routeBase),
+      }
+
+      if (!currentRoute) {
+        // First route, use provided initialState
+        meta.state = initialState
+      }
+
+      currentRoute = to
+
+      if (PropsProvider) {
+        return React.createElement(
+          PropsProvider,
+          { ...props, from, to, pagePropsOptions },
+          originalRoute.component
+        )
+      }
+
+      const { passToPage } = pagePropsOptions || {}
+      return React.createElement(originalRoute.component, {
+        ...props,
+        ...((passToPage && meta.state) || {}),
+      })
+    }
+
     const augmentedRoute = {
       ...originalRoute,
       meta,
-      component: (props: Record<string, any>) => {
-        const { pathname, hash, search } = useLocation()
-        const url = createUrl(pathname + search + hash)
-        const routeBase = base && base({ url })
-
-        const from = currentRoute
-        const to = {
-          ...augmentedRoute,
-          path: pathname,
-          hash,
-          search,
-          params: useParams(),
-          // @ts-ignore -- This should be in ES2019 ??
-          query: Object.fromEntries(url.searchParams),
-          fullPath: getFullPath(url, routeBase),
-        }
-
-        if (!currentRoute) {
-          // First route, use provided initialState
-          meta.state = initialState
-        }
-
-        currentRoute = to
-
-        if (PropsProvider) {
-          return React.createElement(
-            PropsProvider,
-            { ...props, from, to, pagePropsOptions },
-            originalRoute.component
-          )
-        }
-
-        const { passToPage } = pagePropsOptions || {}
-        return React.createElement(originalRoute.component, {
-          ...props,
-          ...((passToPage && meta.state) || {}),
-        })
-      },
+      element,
     }
 
     if (Array.isArray(originalRoute.routes)) {

@@ -33,7 +33,7 @@ Then, add `vite-ssr` with your package manager (direct dependency) and your fram
 yarn add vite-ssr vue@3 vue-router@4 @vueuse/head
 
 # For React
-yarn add vite-ssr react@16 react-router-dom@5
+yarn add vite-ssr react@16 react-router-dom@6
 ```
 
 ## Usage

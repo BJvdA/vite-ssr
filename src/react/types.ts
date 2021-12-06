@@ -10,7 +10,7 @@ import type {
 export interface RouteRaw {
   name?: string
   path: string
-  component: any
+  element: ReactNode
   meta?: Meta
   routes?: RouteRaw[]
   [key: string]: any
